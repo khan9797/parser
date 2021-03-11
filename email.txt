@@ -1,0 +1,2 @@
+The IP checksum calculation result passed on Tx side
+The TCP checksum calculation result passed on Tx side
