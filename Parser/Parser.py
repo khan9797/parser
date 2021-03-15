@@ -41,7 +41,7 @@ class Parser:
             pkt_str = li[meta_details[key]["start"]:meta_details[key]["end"]]
             for i in range(0, len(pkt_str)): 
                 pkt_str[i] = int(pkt_str[i],16)
-                if(i==(len(pkt_str)-1)):
+                if(i==(0)):
                     self.packet_dict["Meta"] = {}
                     csum_offload = ((pkt_str[i] & 0xf0) >> 4)
                     self.packet_dict["Meta"]["l3_outer_csum"] = 1 if((csum_offload & 0x1) >> 0) else 0

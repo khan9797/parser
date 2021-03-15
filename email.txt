@@ -1,2 +1,4 @@
 The IP checksum calculation result passed on Tx side
 The TCP checksum calculation result passed on Tx side
+The L3 Outer checksum verification result passed on Rx side
+The L3 Outer checksum verification result passed on Rx side

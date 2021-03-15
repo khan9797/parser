@@ -3,9 +3,9 @@ import sys
 from Parser.Parser import Parser
 import json
 
-# file = open("udp.txt", "r+") # For UDP Packet
-file = open("tcp.txt", "r+") # For TCP Packet
-# file = open("sctp.txt", "r+") # For SCTP Packet
+# file = open("udp_tx.txt", "r+") 	# For UDP Packet
+file = open("tcp_tx.txt", "r+") 	# For TCP Packet
+# file = open("sctp_tx.txt", "r+") 	# For SCTP Packet
 
 meta_details = {}
 packet_details = {}
@@ -18,15 +18,15 @@ with open('config/packet_details.json') as f:
   packet_details = json.load(f)
 
 packets = file.readlines()
-input_packet = packets[0]
-output_packet = packets[1]
+input_packet = packets[1]
+output_packet = packets[0]
 
-new_input_packet = input_packet.replace('INPUT="', '')
+new_input_packet = input_packet.replace('OUTPUT="', '')
 new_input_packet = new_input_packet.replace(' "\n', '')
 new_input_packet = new_input_packet.replace(' "\n', '')
 
 li = list(new_input_packet.split(" "))
-
+print(li[25:33])
 parser = Parser()
 parser.parse_meta(li,meta_details)
 parser.parse_packet(li, packet_details)
@@ -85,5 +85,15 @@ elif ip_proto == '0x84':
 	else:
 		email_file.write("The SCTP checksum calculation result DID NOT pass on Tx side\n")
 
+if(parser.packet_dict['Meta']['l3_outer_csum']):
+	email_file.write("The L3 Outer checksum verification result passed on Rx side\n")
+else:
+	email_file.write("The L3 Outer checksum verification result DID NOT pass on Rx side\n")
+
+
+if(parser.packet_dict['Meta']['l4_outer_csum']):
+	email_file.write("The L4 Outer checksum verification result passed on Rx side\n")
+else:
+	email_file.write("The L4 Outer checksum verification result DID NOT pass on Rx side\n")
 
 file.close()

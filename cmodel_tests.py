@@ -24,8 +24,8 @@ def test():
 """
 Test case to verify tcp L3 outer checksum calculation
 """
-def test_tcp_outer_l3_checksum():
-    file = open("tcp.txt", "r+")
+def test_tcp_outer_l3_checksum_calculation():
+    file = open("tcp_tx.txt", "r+")
     packets = file.readlines()
     packets = packets[1]
 
@@ -46,8 +46,8 @@ def test_tcp_outer_l3_checksum():
 """
 Test case to verify tcp L4 outer checksum verification
 """
-def test_tcp_outer_l4_checksum():
-    file = open("tcp.txt", "r+")
+def test_tcp_outer_l4_checksum_calculation():
+    file = open("tcp_tx.txt", "r+")
     packets = file.readlines()
     packets = packets[1]
 
@@ -68,8 +68,8 @@ def test_tcp_outer_l4_checksum():
 """
 Test case to verify udp L3 outer checksum calculation
 """
-def test_udp_outer_l3_checksum():
-    file = open("udp.txt", "r+")
+def test_udp_outer_l3_checksum_calculation():
+    file = open("udp_tx.txt", "r+")
     packets = file.readlines()
     packets = packets[1]
 
@@ -79,6 +79,7 @@ def test_udp_outer_l3_checksum():
 
     li = list(packet.split(" "))
     parser = Parser()
+
     parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
 
@@ -87,12 +88,11 @@ def test_udp_outer_l3_checksum():
     else:
         return False
 
-
 """
 Test case to verify udp L4 outer checksum verification
 """
-def test_udp_outer_l4_checksum():
-    file = open("udp.txt", "r+")
+def test_udp_outer_l4_checksum_calculation():
+    file = open("udp_tx.txt", "r+")
     packets = file.readlines()
     packets = packets[1]
 
@@ -110,4 +110,102 @@ def test_udp_outer_l4_checksum():
     else:
         return False
 
-cmodel_tests = [test_tcp_outer_l3_checksum,test_tcp_outer_l4_checksum,test_udp_outer_l3_checksum,test_udp_outer_l4_checksum]
+"""
+Test case to verify sctp L3 outer checksum calculation
+"""
+def test_sctp_outer_l3_checksum_calculation():
+    file = open("sctp_tx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
+
+    if(parser.packet_dict['IP']['chksum'] == "0xa35f"):
+        return True
+    else:
+        return False
+
+"""
+Test case to verify sctp L4 outer checksum verification
+"""
+def test_sctp_outer_l4_checksum_calculation():
+    file = open("sctp_tx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
+    
+    if(parser.packet_dict['SCTP']['chksum'] == "0x9e06eb83"):
+        return True
+    else:
+        return False
+
+"""
+Test case to verify tcp L3 outer checksum verification
+"""
+def test_tcp_outer_l3_checksum_verification():
+    file = open("tcp_rx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
+
+    if(parser.packet_dict['Meta']['l3_outer_csum']):
+        return True
+    else:
+        return False
+
+"""
+Test case to verify tcp L4 outer checksum verification
+"""
+def test_tcp_outer_l4_checksum_verification():
+    file = open("tcp_rx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
+
+    if(parser.packet_dict['Meta']['l4_outer_csum']):
+        return True
+    else:
+        return False
+
+cmodel_tests = [
+    test_tcp_outer_l3_checksum_calculation,
+    test_tcp_outer_l4_checksum_calculation,
+    test_tcp_outer_l3_checksum_verification,
+    test_tcp_outer_l4_checksum_verification,
+    test_udp_outer_l3_checksum_calculation,
+    test_udp_outer_l4_checksum_calculation,
+    test_sctp_outer_l3_checksum_calculation,
+    test_sctp_outer_l4_checksum_calculation
+]
