@@ -1,1 +1,2 @@
-Parse/__pycache__
+*.pyc
+*.pyo

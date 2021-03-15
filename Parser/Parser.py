@@ -1,4 +1,4 @@
-from scapy.all import *
+from scapy.all import Packet, raw
 from scapy.layers.inet import IP, Ether, TCP, UDP
 from scapy.layers.sctp import SCTP
 
