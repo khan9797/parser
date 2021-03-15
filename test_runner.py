@@ -20,23 +20,23 @@ if __name__ == '__main__':
     # print(args['port'],args['module'])
 
     if (args['module'] == 'driver'):
+        pass
+        # try:
+        #     ping_command = "../configure_driver.sh"
 
-        try:
-            ping_command = "../configure_driver.sh"
+        #     (output, error) = subprocess.Popen(ping_command,
+        #                                    stdout=subprocess.PIPE,
+        #                                    stderr=subprocess.PIPE,
+        #                                    shell=True).communicate()
+        # except subprocess.CalledProcessError as e:
+        #     print('Unable to configure driver')
 
-            (output, error) = subprocess.Popen(ping_command,
-                                           stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE,
-                                           shell=True).communicate()
-        except subprocess.CalledProcessError as e:
-            print('Unable to configure driver')
+        # """
+        # This is a list of the names of all the test cases defined driver_tests.py file.
 
-        """
-        This is a list of the names of all the test cases defined driver_tests.py file.
-
-        NOTE: The names should be exactly as defined in the driver_tests.py.
-        """
-        tests = driver_tests
+        # NOTE: The names should be exactly as defined in the driver_tests.py.
+        # """
+        # tests = driver_tests
     elif (args['module'] == 'cmodel'):
 
         # try:
@@ -57,8 +57,8 @@ if __name__ == '__main__':
         
         tests = cmodel_tests
 
-    """tes
-    test_runner method of the Tester class called and list of test cases (tests) passed"""
-
+    """test_runner method of the Tester class called and list of test cases (tests) passed"""
+    
     tester = Tester()
+    pkt = {"test":"packet"}
     tester.test_runner(tests)

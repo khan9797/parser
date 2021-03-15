@@ -7,38 +7,14 @@ import json
 file = open("tcp.txt", "r+") # For TCP Packet
 # file = open("sctp.txt", "r+") # For SCTP Packet
 
-meta_details = {
-	"Meta":{
-		"start":16,
-		"end":24
-	},
-}
-packet_details = {
-	"Ether": {
-		"start": 33,
-		"end": 47,
-		"type": {
-			"0x800": {
-				"start": 47,
-				"end": 67,
-				"proto": {
-					"0x6": {
-						"start": 67,
-						"end": 87
-					},
-					"0x11": {
-						"start": 67,
-						"end": 75
-					},
-					"0x84": {
-						"start": 67,
-						"end": 79
-					}
-				}
-			}
-		}
-	}
-}
+meta_details = {}
+packet_details = {}
+
+with open('config/meta_details.json') as f:
+  meta_details = json.load(f)
+
+with open('config/packet_details.json') as f:
+  packet_details = json.load(f)
 
 packets = file.readlines()
 input_packet = packets[0]

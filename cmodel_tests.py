@@ -1,10 +1,7 @@
 import os
 import subprocess
 from scapy.all import sendp, raw
-from scapy.layers.inet import IP
-from scapy.layers.inet import Ether
-from scapy.layers.inet import TCP
-from scapy.layers.inet import UDP
+from scapy.layers.inet import IP, Ether, TCP, UDP
 
 """
 A sample test case. It should return True if the test passes and False in case of failure.
