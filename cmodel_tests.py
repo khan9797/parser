@@ -2,6 +2,18 @@ import os
 import subprocess
 from scapy.all import sendp, raw
 from scapy.layers.inet import IP, Ether, TCP, UDP
+import json
+from Parser.Parser import Parser
+
+meta_details = {}
+packet_details = {}
+
+with open('config/meta_details.json') as f:
+  meta_details = json.load(f)
+
+
+with open('config/packet_details.json') as f:
+  packet_details = json.load(f)
 
 """
 A sample test case. It should return True if the test passes and False in case of failure.
@@ -13,112 +25,89 @@ def test():
 Test case to verify tcp L3 outer checksum calculation
 """
 def test_tcp_outer_l3_checksum():
-    # file = open("/etc/result.txt", "r+")
-    # file.truncate(0)
+    file = open("tcp.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
 
-    # Payload = '0' * 640
-    # ip_pkt = IP(version=0x04,ihl=0x5,tos=0x0,len=0x028A,id=0x0001,flags=0x0000,ttl=0xFF,proto=0x06,src='10.60.0.1',dst='10.60.1.1')
-    # pkt = Ether(dst='00:34:56:78:9a:bc',src='00:45:67:89:ab:cd')/ip_pkt/TCP()/Payload
-    # result = pkt.show2(dump=True, label_lvl="IP")
-    # packet = IP(raw(ip_pkt))
-    # ip_checksum = hex(packet[IP].chksum)
-    # # print(ip_checksum)
-    # sendp(pkt,iface='sn0',count=1)
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
 
-    # chk = file.readlines()
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
 
-    # if (len(chk) > 0):
-    #     if (ip_checksum in chk[0]):
-    #         file.close()
-    #         return True
-    #     else:
-    #         file.close()
-    #         return False
-    # file.close()
-    return True
-
+    if(parser.packet_dict['IP']['chksum'] == "0xa3d5"):
+        return True
+    else:
+        return False
 
 """
 Test case to verify tcp L4 outer checksum verification
 """
 def test_tcp_outer_l4_checksum():
-    # file = open("/etc/result.txt", "r+")
-    # file.truncate(0)
+    file = open("tcp.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
 
-    # Payload = '0' * 640
-    # ip_pkt = IP(version=0x04,ihl=0x5,tos=0x0,len=0x028A,id=0x0001,flags=0x0000,ttl=0xFF,proto=0x06,src='10.60.0.1',dst='10.60.1.1')
-    # pkt = Ether(dst='00:34:56:78:9a:bc',src='00:45:67:89:ab:cd')/ip_pkt/TCP()/Payload
-    # result = pkt.show2(dump=True, label_lvl="IP")
-    # packet = IP(raw(ip_pkt))
-    # ip_checksum = hex(packet[IP].chksum)
-    # # print(ip_checksum)
-    # sendp(pkt,iface='sn0',count=1)
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
 
-    # chk = file.readlines()
-
-    # if (len(chk) > 0):
-    #     if ('0xe3a' in chk[1]):
-    #         file.close()
-    #         return True
-    #     else:
-    #         file.close()
-    #         return False
-    return True
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
+    
+    if(parser.packet_dict['TCP']['chksum'] == "0x3b49"):
+        return True
+    else:
+        return False
 
 """
 Test case to verify udp L3 outer checksum calculation
 """
 def test_udp_outer_l3_checksum():
-    # file = open("/etc/result.txt", "r+")
-    # file.truncate(0)
+    file = open("udp.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
 
-    # Payload = '0' * 640
-    # ip_pkt = IP(version=0x04,ihl=0x5,tos=0x0,len=0x028A,id=0x0001,flags=0x0000,ttl=0xFF,proto=0x11,src='10.60.0.1',dst='10.60.1.1')
-    # pkt = Ether(dst='00:34:56:78:9a:bc',src='00:45:67:89:ab:cd')/ip_pkt/UDP()/Payload
-    # result = pkt.show2(dump=True, label_lvl="IP")
-    # packet = IP(raw(ip_pkt))
-    # ip_checksum = hex(packet[IP].chksum)
-    # # print(ip_checksum)
-    # sendp(pkt,iface='sn0',count=1)
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
 
-    # chk = file.readlines()
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
 
-    # if (len(chk) > 0):
-    #     if (ip_checksum in chk[0]):
-    #         file.close()
-    #         return True
-    #     else:
-    #         file.close()
-    #         return False
-    # file.close()
-    return True
+    if(parser.packet_dict['IP']['chksum'] == "0xa3d6"):
+        return True
+    else:
+        return False
 
 
 """
 Test case to verify udp L4 outer checksum verification
 """
 def test_udp_outer_l4_checksum():
-    # file = open("/etc/result.txt", "r+")
-    # file.truncate(0)
+    file = open("udp.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
 
-    # Payload = '0' * 640
-    # ip_pkt = IP(version=0x04,ihl=0x5,tos=0x0,len=0x028A,id=0x0001,flags=0x0000,ttl=0xFF,proto=0x11,src='10.60.0.1',dst='10.60.1.1')
-    # pkt = Ether(dst='00:34:56:78:9a:bc',src='00:45:67:89:ab:cd')/ip_pkt/UDP()/Payload
-    # result = pkt.show2(dump=True, label_lvl="IP")
-    # packet = IP(raw(ip_pkt))
-    # ip_checksum = hex(packet[IP].chksum)
-    # # print(ip_checksum)
-    # sendp(pkt,iface='sn0',count=1)
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
 
-    # chk = file.readlines()
-
-    # if (len(chk) > 0):
-    #     if ('0x5a82' in chk[1]):
-    #         file.close()
-    #         return True
-    #     else:
-    #         file.close()
-    #         return False
-    return True
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details)
+    parser.parse_packet(li, packet_details)
+    
+    if(parser.packet_dict['UDP']['chksum'] == "0xa8be"):
+        return True
+    else:
+        return False
 
 cmodel_tests = [test_tcp_outer_l3_checksum,test_tcp_outer_l4_checksum,test_udp_outer_l3_checksum,test_udp_outer_l4_checksum]

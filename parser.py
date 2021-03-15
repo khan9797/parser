@@ -13,6 +13,7 @@ packet_details = {}
 with open('config/meta_details.json') as f:
   meta_details = json.load(f)
 
+
 with open('config/packet_details.json') as f:
   packet_details = json.load(f)
 
