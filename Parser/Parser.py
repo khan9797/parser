@@ -39,15 +39,45 @@ class Parser:
     def parse_meta(self, li, meta_details):
         for key in meta_details:
             pkt_str = li[meta_details[key]["start"]:meta_details[key]["end"]]
+            self.packet_dict["Meta"] = {}
             for i in range(0, len(pkt_str)): 
                 pkt_str[i] = int(pkt_str[i],16)
-                if(i==(0)):
-                    self.packet_dict["Meta"] = {}
+                
+            for i in range(0, len(pkt_str)):
+                if(i == 0 ):
                     csum_offload = ((pkt_str[i] & 0xf0) >> 4)
                     self.packet_dict["Meta"]["l3_outer_csum"] = 1 if((csum_offload & 0x1) >> 0) else 0
                     self.packet_dict["Meta"]["l4_outer_csum"] = 1 if((csum_offload & 0x2) >> 1) else 0
                     self.packet_dict["Meta"]["l3_inner_csum"] = 1 if((csum_offload & 0x4) >> 2) else 0
                     self.packet_dict["Meta"]["l4_inner_csum"] = 1 if((csum_offload & 0x8) >> 3) else 0
+
+                    tunnel_packet = ((pkt_str[i] & 0x0f))
+                    self.packet_dict["Meta"]["tunnel_packet"] = 1 if((tunnel_packet & 0x8) >> 3) else 0
+                elif(i == 1 ):
+                    rss_hash_type = pkt_str[i]
+                    if(rss_hash_type):
+                        self.packet_dict["Meta"]["rss_hash_type"] = {}
+                        self.packet_dict["Meta"]["rss_hash_type"]["l3_src"] = ((rss_hash_type & 0x03) >> 0)
+                        self.packet_dict["Meta"]["rss_hash_type"]["l3_dst"] = ((rss_hash_type & 0x0c) >> 2)
+                        self.packet_dict["Meta"]["rss_hash_type"]["l4_src"] = ((rss_hash_type & 0x30) >> 4)
+                        self.packet_dict["Meta"]["rss_hash_type"]["l4_dst"] = ((rss_hash_type & 0xc0) >> 6)
+                    else:
+                        self.packet_dict["Meta"]["rss_hash_type"] = rss_hash_type
+                elif(i == 2 ):
+                    rss_hash = pkt_str[i:i+4]
+                    rss_hash.reverse()
+                    hash_str = ''.join([(hex(i).replace('0x','')) for i in rss_hash])
+                    self.packet_dict["Meta"]["rss_hash"] = '0x'+hash_str
+                    i += 4
+                elif(i == 6 ):
+                    self.packet_dict["Meta"]["vlan_fields"] = {}
+                    vlan_fields = pkt_str[i:i+2]
+                    vlan_fields.reverse()
+                    vlan_str = ''.join([(hex(i).replace('0x','')) for i in vlan_fields])
+                    self.packet_dict["Meta"]["vlan_fields"]['vlan_tag']     = hex((int(vlan_str,16) & 0xfff0) >> 4)
+                    self.packet_dict["Meta"]["vlan_fields"]['vlan_id']      = hex((int(vlan_str,16) & 0xe) >> 1)
+                    self.packet_dict["Meta"]["vlan_fields"]['vlan_present'] = ((int(vlan_str,16) & 0x1) >> 0)
+                    i += 2
 
     def parse_packet(self, li, packet_details):
         for key in packet_details:

@@ -37,7 +37,7 @@ def test_tcp_outer_l3_checksum_calculation():
 
     li = list(packet.split(" "))
     parser = Parser()
-    parser.parse_meta(li,meta_details)
+    # parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
 
     if(parser.packet_dict['IP']['chksum'] == "0xa3d5"):
@@ -61,7 +61,7 @@ def test_tcp_outer_l4_checksum_calculation():
 
     li = list(packet.split(" "))
     parser = Parser()
-    parser.parse_meta(li,meta_details)
+    # parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
     
     if(parser.packet_dict['TCP']['chksum'] == "0x3b49"):
@@ -86,7 +86,7 @@ def test_udp_outer_l3_checksum_calculation():
     li = list(packet.split(" "))
     parser = Parser()
 
-    parser.parse_meta(li,meta_details)
+    # parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
 
     if(parser.packet_dict['IP']['chksum'] == "0xa3d6"):
@@ -110,7 +110,7 @@ def test_udp_outer_l4_checksum_calculation():
 
     li = list(packet.split(" "))
     parser = Parser()
-    parser.parse_meta(li,meta_details)
+    # parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
     
     if(parser.packet_dict['UDP']['chksum'] == "0xa8be"):
@@ -135,7 +135,7 @@ def test_sctp_outer_l3_checksum_calculation():
     li = list(packet.split(" "))
     parser = Parser()
 
-    parser.parse_meta(li,meta_details)
+    # parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
 
     if(parser.packet_dict['IP']['chksum'] == "0xa35f"):
@@ -159,7 +159,7 @@ def test_sctp_outer_l4_checksum_calculation():
 
     li = list(packet.split(" "))
     parser = Parser()
-    parser.parse_meta(li,meta_details)
+    # parser.parse_meta(li,meta_details)
     parser.parse_packet(li, packet_details)
     
     if(parser.packet_dict['SCTP']['chksum'] == "0x9e06eb83"):
