@@ -22,9 +22,9 @@ if __name__ == '__main__':
     if (args['module'] == 'driver'):
         pass
         # try:
-        #     ping_command = "../configure_driver.sh"
+        #     command = "../configure_driver.sh"
 
-        #     (output, error) = subprocess.Popen(ping_command,
+        #     (output, error) = subprocess.Popen(command,
         #                                    stdout=subprocess.PIPE,
         #                                    stderr=subprocess.PIPE,
         #                                    shell=True).communicate()
@@ -40,9 +40,9 @@ if __name__ == '__main__':
     elif (args['module'] == 'cmodel'):
 
         # try:
-        #     ping_command = "../configure_cmodel.sh"
+        #     command = "../configure_cmodel.sh"
 
-        #     (output, error) = subprocess.Popen(ping_command,
+        #     (output, error) = subprocess.Popen(command,
         #                                    stdout=subprocess.PIPE,
         #                                    stderr=subprocess.PIPE,
         #                                    shell=True).communicate()
@@ -58,7 +58,5 @@ if __name__ == '__main__':
         tests = cmodel_tests
 
     """test_runner method of the Tester class called and list of test cases (tests) passed"""
-    
     tester = Tester()
-    pkt = {"test":"packet"}
     tester.test_runner(tests)
