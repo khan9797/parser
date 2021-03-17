@@ -11,12 +11,14 @@ if __name__ == '__main__':
     tests = []
 
     # Add the arguments to the parser
-    ap.add_argument("-p", "--port", required=True,
+    ap.add_argument("-p", "--port", required=False,
        help="Pass the PF here. Its value can either be 'sn0' or 'sn1'.")
-    ap.add_argument("-m", "--module", required=True,
+    ap.add_argument("-m", "--module", required=False,
        help="Pass the module you want to test. Its value can either be 'driver' or 'cmodel'")
     ap.add_argument("-t", "--tests", required=False, type=str,
-       help="Pass the comma separated names of the test cases in quotes that you want to run in the specific module e.g \"test1,test2,test3 ...\". If no argument is passed then it will run all the test cases for that specific module. ")
+       help="Pass the comma separated names of the test cases in quotes that you want to run in the specific module e.g \"test1,test2,test3 ...\". If no argument is passed then it will run all the test cases for that specific module. NOTE: The names of the test cases should be exactly as given in the in the code.")
+    ap.add_argument("-s", "--show", required=False, type=str,
+       help="Pass the module name for which you want to print the test cases.")
     args = vars(ap.parse_args())
 
     # print(args['port'],args['module'])
@@ -39,6 +41,8 @@ if __name__ == '__main__':
         # NOTE: The names should be exactly as defined in the driver_tests.py.
         # """
         # tests = driver_tests
+        # tester = Tester()
+        # tester.test_runner(tests)
     elif (args['module'] == 'cmodel'):
 
         # try:
@@ -56,11 +60,32 @@ if __name__ == '__main__':
 
         NOTE: The names should be exactly as defined in the cmodel_tests.py.
         """
-        
-        tests = cmodel_tests
+        if (args['tests']):
+            tst = list(args['tests'].split(","))
+            test_list = []
+            tests = cmodel_tests
+            for test in tests:
+                for t in tst:
+                    if(getattr(test,'__name__') == t):
+                        test_list.append(test)
+            tests = test_list
+            tester = Tester()
+            tester.test_runner(tests)
+        else:
+            tests = cmodel_tests
+            tester = Tester()
+            tester.test_runner(tests)
 
-    """test_runner method of the Tester class called and list of test cases (tests) passed"""
-    # for test in tests:
-    #     print(getattr(test,'__name__'))
-    tester = Tester()
-    tester.test_runner(tests)
+
+    if (args['show'] == 'driver'):
+        tests = driver_tests
+        i = 1
+        for test in tests:
+            print(f"[{i}] => {getattr(test,'__name__')}")
+            i+=1
+    elif (args['show'] == 'cmodel'):
+        tests = cmodel_tests
+        i = 1
+        for test in tests:
+            print(f"[{i}] => {getattr(test,'__name__')}")
+            i+=1
