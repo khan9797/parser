@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # print(args['port'],args['module'])
 
     if (args['module'] == 'driver'):
-        pass
+        
         # try:
         #     command = "../configure_driver.sh"
 
@@ -40,9 +40,22 @@ if __name__ == '__main__':
 
         # NOTE: The names should be exactly as defined in the driver_tests.py.
         # """
-        # tests = driver_tests
-        # tester = Tester()
-        # tester.test_runner(tests)
+        if (args['tests']):
+            tst = list(args['tests'].split(","))
+            test_list = []
+            tests = driver_tests
+            for test in tests:
+                for t in tst:
+                    if(getattr(test,'__name__') == t):
+                        test_list.append(test)
+            tests = test_list
+            tester = Tester()
+            tester.test_runner(tests)
+        else:
+            tests = driver_tests
+            tester = Tester()
+            tester.test_runner(tests)
+
     elif (args['module'] == 'cmodel'):
 
         # try:
