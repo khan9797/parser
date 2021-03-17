@@ -15,6 +15,8 @@ if __name__ == '__main__':
        help="Pass the PF here. Its value can either be 'sn0' or 'sn1'.")
     ap.add_argument("-m", "--module", required=True,
        help="Pass the module you want to test. Its value can either be 'driver' or 'cmodel'")
+    ap.add_argument("-t", "--tests", required=False, type=str,
+       help="Pass the comma separated names of the test cases in quotes that you want to run in the specific module e.g \"test1,test2,test3 ...\". If no argument is passed then it will run all the test cases for that specific module. ")
     args = vars(ap.parse_args())
 
     # print(args['port'],args['module'])
@@ -58,5 +60,7 @@ if __name__ == '__main__':
         tests = cmodel_tests
 
     """test_runner method of the Tester class called and list of test cases (tests) passed"""
+    # for test in tests:
+    #     print(getattr(test,'__name__'))
     tester = Tester()
     tester.test_runner(tests)
