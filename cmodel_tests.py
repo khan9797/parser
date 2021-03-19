@@ -183,7 +183,7 @@ def test_tcp_outer_l3_checksum_verification():
 
     li = list(packet.split(" "))
     parser = Parser()
-    parser.parse_meta(li,meta_details)
+    parser.parse_meta(li,meta_details, "RX")
     parser.parse_packet(li, packet_details)
     # print(json.dumps(parser.packet_dict))
     if(parser.packet_dict['Meta']['l3_outer_csum']):
@@ -207,13 +207,42 @@ def test_tcp_outer_l4_checksum_verification():
 
     li = list(packet.split(" "))
     parser = Parser()
-    parser.parse_meta(li,meta_details)
+    parser.parse_meta(li,meta_details, "RX")
     parser.parse_packet(li, packet_details)
 
     if(parser.packet_dict['Meta']['l4_outer_csum']):
         return True
     else:
         return False
+
+"""
+Test case to verify tcp L4 outer checksum verification
+"""
+def test_vlan():
+    # TODO: Create and send the packet here
+
+    file = open("vlan_tx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details, "TX")
+    vlan_hdr = li[packet_details["Ether"]["start"]+12:packet_details["Ether"]["start"]+16]
+    vlan_hdr = vlan_hdr[2:]+vlan_hdr[:2]
+    li = li[:packet_details["Ether"]["start"]+12] + li[packet_details["Ether"]["start"]+16:]
+    parser.parse_packet(li, packet_details)
+    vlan_pkt = parser.create_pkt(vlan_hdr,"vlan")
+    parser.pkt_to_json(parser.packet_dict,vlan_pkt)
+    print(json.dumps(parser.packet_dict))
+    # if(parser.packet_dict['Meta']['l4_outer_csum']):
+    #     return True
+    # else:
+    #     return False
 
 cmodel_tests = [
     test_tcp_outer_l3_checksum_calculation,
@@ -223,5 +252,6 @@ cmodel_tests = [
     test_udp_outer_l3_checksum_calculation,
     test_udp_outer_l4_checksum_calculation,
     test_sctp_outer_l3_checksum_calculation,
-    test_sctp_outer_l4_checksum_calculation
+    test_sctp_outer_l4_checksum_calculation,
+    test_vlan
 ]
