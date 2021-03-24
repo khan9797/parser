@@ -10,7 +10,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     tests = []
 
-    # Add the arguments to the parser
+    # Add the command line arguments to the parser
     ap.add_argument("-p", "--port", required=False,
        help="Pass the PF here. Its value can either be 'sn0' or 'sn1'.")
     ap.add_argument("-m", "--module", required=False,
@@ -73,18 +73,18 @@ if __name__ == '__main__':
 
         NOTE: The names should be exactly as defined in the cmodel_tests.py.
         """
-        if (args['tests']):
+        if (args['tests']): #runs specific testcases
             tst = list(args['tests'].split(","))
             test_list = []
             tests = cmodel_tests
             for test in tests:
                 for t in tst:
-                    if(getattr(test,'__name__') == t):
+                    if(getattr(test,'__name__') == t): #comparison between function pointers improted from cmodel_tests and testcases given as arguments
                         test_list.append(test)
             tests = test_list
             tester = Tester()
             tester.test_runner(tests)
-        else:
+        else: #run all testcases
             tests = cmodel_tests
             tester = Tester()
             tester.test_runner(tests)

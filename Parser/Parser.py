@@ -18,6 +18,7 @@ class Parser:
                 else:
                     self.packet_dict[layer][key.strip()] = val.strip()
 
+#creating packets using Scapy parser from hex string
     def create_pkt(self, pkt_str, type="Ether"):
         for i in range(0, len(pkt_str)): 
             pkt_str[i] = int(pkt_str[i],16)

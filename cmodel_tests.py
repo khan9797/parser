@@ -33,7 +33,6 @@ def test_tcp_outer_l3_checksum_calculation():
 
     packet = packets.replace('OUTPUT="', '')
     packet = packet.replace(' "\n', '')
-    packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
     parser = Parser()
@@ -56,7 +55,6 @@ def test_tcp_outer_l4_checksum_calculation():
     packets = packets[1]
 
     packet = packets.replace('OUTPUT="', '')
-    packet = packet.replace(' "\n', '')
     packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
@@ -81,7 +79,6 @@ def test_udp_outer_l3_checksum_calculation():
 
     packet = packets.replace('OUTPUT="', '')
     packet = packet.replace(' "\n', '')
-    packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
     parser = Parser()
@@ -105,7 +102,6 @@ def test_udp_outer_l4_checksum_calculation():
     packets = packets[1]
 
     packet = packets.replace('OUTPUT="', '')
-    packet = packet.replace(' "\n', '')
     packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
@@ -179,7 +175,6 @@ def test_tcp_outer_l3_checksum_verification():
 
     packet = packets.replace('OUTPUT="', '')
     packet = packet.replace(' "\n', '')
-    packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
     parser = Parser()
@@ -203,7 +198,6 @@ def test_tcp_outer_l4_checksum_verification():
 
     packet = packets.replace('OUTPUT="', '')
     packet = packet.replace(' "\n', '')
-    packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
     parser = Parser()
@@ -226,7 +220,6 @@ def test_vlan():
     packets = packets[1]
 
     packet = packets.replace('OUTPUT="', '')
-    packet = packet.replace(' "\n', '')
     packet = packet.replace(' "\n', '')
 
     li = list(packet.split(" "))
