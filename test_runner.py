@@ -22,83 +22,89 @@ if __name__ == '__main__':
     args = vars(ap.parse_args())
 
     # print(args['port'],args['module'])
+    if(args['module'] ):
+        if (args['module'] == 'driver'):
+            
+            # try:
+            #     command = "../configure_driver.sh"
 
-    if (args['module'] == 'driver'):
-        
-        # try:
-        #     command = "../configure_driver.sh"
+            #     (output, error) = subprocess.Popen(command,
+            #                                    stdout=subprocess.PIPE,
+            #                                    stderr=subprocess.PIPE,
+            #                                    shell=True).communicate()
+            # except subprocess.CalledProcessError as e:
+            #     print('Unable to configure driver')
 
-        #     (output, error) = subprocess.Popen(command,
-        #                                    stdout=subprocess.PIPE,
-        #                                    stderr=subprocess.PIPE,
-        #                                    shell=True).communicate()
-        # except subprocess.CalledProcessError as e:
-        #     print('Unable to configure driver')
+            # """
+            # This is a list of the names of all the test cases defined driver_tests.py file.
 
-        # """
-        # This is a list of the names of all the test cases defined driver_tests.py file.
+            # NOTE: The names should be exactly as defined in the driver_tests.py.
+            # """
+            if (args['tests']):
+                tst = list(args['tests'].split(","))
+                test_list = []
+                tests = driver_tests
+                for test in tests:
+                    for t in tst:
+                        if(getattr(test,'__name__') == t):
+                            test_list.append(test)
+                tests = test_list
+                tester = Tester()
+                tester.test_runner(tests)
+            else:
+                tests = driver_tests
+                tester = Tester()
+                tester.test_runner(tests)
 
-        # NOTE: The names should be exactly as defined in the driver_tests.py.
-        # """
-        if (args['tests']):
-            tst = list(args['tests'].split(","))
-            test_list = []
-            tests = driver_tests
-            for test in tests:
-                for t in tst:
-                    if(getattr(test,'__name__') == t):
-                        test_list.append(test)
-            tests = test_list
-            tester = Tester()
-            tester.test_runner(tests)
+        elif (args['module'] == 'cmodel'):
+
+            # try:
+            #     command = "../configure_cmodel.sh"
+
+            #     (output, error) = subprocess.Popen(command,
+            #                                    stdout=subprocess.PIPE,
+            #                                    stderr=subprocess.PIPE,
+            #                                    shell=True).communicate()
+            # except subprocess.CalledProcessError as e:
+            #     print('Unable to configure cmodel')
+
+            """
+            This is a list of the names of all the test cases defined cmodel_tests.py file.
+
+            NOTE: The names should be exactly as defined in the cmodel_tests.py.
+            """
+            if (args['tests']): #runs specific testcases
+                tst = list(args['tests'].split(","))
+                test_list = []
+                tests = cmodel_tests
+                for test in tests:
+                    for t in tst:
+                        if(getattr(test,'__name__') == t): #comparison between function pointers improted from cmodel_tests and testcases given as arguments
+                            test_list.append(test)
+                tests = test_list
+                tester = Tester()
+                tester.test_runner(tests)
+            else: #run all testcases
+                tests = cmodel_tests
+                tester = Tester()
+                tester.test_runner(tests)
         else:
+            print(f"Error: Uknown argument '{args['module']}'")
+
+    if(args['show'] ):
+        if (args['show'] == 'driver'):
             tests = driver_tests
-            tester = Tester()
-            tester.test_runner(tests)
-
-    elif (args['module'] == 'cmodel'):
-
-        # try:
-        #     command = "../configure_cmodel.sh"
-
-        #     (output, error) = subprocess.Popen(command,
-        #                                    stdout=subprocess.PIPE,
-        #                                    stderr=subprocess.PIPE,
-        #                                    shell=True).communicate()
-        # except subprocess.CalledProcessError as e:
-        #     print('Unable to configure cmodel')
-
-        """
-        This is a list of the names of all the test cases defined cmodel_tests.py file.
-
-        NOTE: The names should be exactly as defined in the cmodel_tests.py.
-        """
-        if (args['tests']): #runs specific testcases
-            tst = list(args['tests'].split(","))
-            test_list = []
-            tests = cmodel_tests
+            i = 1
             for test in tests:
-                for t in tst:
-                    if(getattr(test,'__name__') == t): #comparison between function pointers improted from cmodel_tests and testcases given as arguments
-                        test_list.append(test)
-            tests = test_list
-            tester = Tester()
-            tester.test_runner(tests)
-        else: #run all testcases
+                print(f"[{i}] => {getattr(test,'__name__')}")
+                i+=1
+        elif (args['show'] == 'cmodel'):
             tests = cmodel_tests
-            tester = Tester()
-            tester.test_runner(tests)
-
-
-    if (args['show'] == 'driver'):
-        tests = driver_tests
-        i = 1
-        for test in tests:
-            print(f"[{i}] => {getattr(test,'__name__')}")
-            i+=1
-    elif (args['show'] == 'cmodel'):
-        tests = cmodel_tests
-        i = 1
-        for test in tests:
-            print(f"[{i}] => {getattr(test,'__name__')}")
-            i+=1
+            i = 1
+            for test in tests:
+                print(f"[{i}] => {getattr(test,'__name__')}")
+                i+=1
+        elif (args['show'] == ''):
+            pass
+        else:
+            print(f"Error: Uknown argument '{args['show']}'")
