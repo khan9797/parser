@@ -1,9 +1,10 @@
 import os
 import subprocess
-from scapy.all import sendp, raw
-from scapy.layers.inet import IP, Ether, TCP, UDP
+from scapy.all import *
+#from scapy.layers.inet import IP, Ether, TCP, UDP
 import json
 from Parser.Parser import Parser
+from packets import *
 
 meta_details = {}
 packet_details = {}
@@ -26,6 +27,15 @@ Test case to verify tcp L3 outer checksum calculation
 """
 def test_tcp_outer_l3_checksum_calculation():
     # TODO: Create and send the packet here
+    packet = ip_hdr/TCP()/payload
+    packet.show()
+    #ip_packet = IP(raw(packet))  # Build packet (automatically done when sending)
+    #packet = packet.__class__(bytes(packet))
+    packet.show()
+    ip_checksum = packet[IP].chksum
+    tcp_checksum = packet[TCP].chksum
+    print('The ip_csum is', ip_checksum)
+    print('The tcp_csum is', tcp_checksum)
 
     file = open("tcp_tx.txt", "r+")
     packets = file.readlines()
