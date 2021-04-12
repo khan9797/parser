@@ -492,7 +492,77 @@ def test_vlan_tx_tcp_l3l4_outer_checksum():
         return False
 
 
+"""
+Test case to verify udp outer L3 and L4 with VLAN 
 
+"""
+def test_vlan_tx_udp_l3l4_outer_checksum():
+    # TODO: Create and send the packet here
+    packet = ether_hdr/vlan_header/ip_hdr/udp_hdr/payload
+
+    ip_packet = packet.__class__(bytes(packet))
+    #ip_packet.show()
+    ip_checksum = ip_packet[IP].chksum
+    udp_checksum = ip_packet[UDP].chksum
+
+    file = open("vlan_tx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details, "TX")
+    vlan_hdr = li[packet_details["Ether"]["start"]+12:packet_details["Ether"]["start"]+16]
+    vlan_hdr = vlan_hdr[2:]+vlan_hdr[:2]
+    li = li[:packet_details["Ether"]["start"]+12] + li[packet_details["Ether"]["start"]+16:]
+    parser.parse_packet(li, packet_details)
+    vlan_pkt = parser.create_pkt(vlan_hdr,"vlan")
+    parser.pkt_to_json(parser.packet_dict,vlan_pkt)
+    print(json.dumps(parser.packet_dict))
+
+    if(parser.packet_dict['IP']['chksum'] == hex(ip_checksum) and parser.packet_dict['UDP']['chksum'] == hex(udp_checksum)):
+        return True
+    else:
+        return False
+
+"""
+Test case to verify sctp outer L3 and L4 with VLAN 
+
+"""
+def test_vlan_tx_sctp_l3l4_outer_checksum():
+    # TODO: Create and send the packet here
+    packet = ether_hdr/vlan_header/ip_hdr/sctp_hdr/payload
+
+    ip_packet = packet.__class__(bytes(packet))
+    #ip_packet.show()
+    ip_checksum = ip_packet[IP].chksum
+    sctp_checksum = ip_packet[SCTP].chksum
+
+    file = open("vlan_tx.txt", "r+")
+    packets = file.readlines()
+    packets = packets[1]
+
+    packet = packets.replace('OUTPUT="', '')
+    packet = packet.replace(' "\n', '')
+
+    li = list(packet.split(" "))
+    parser = Parser()
+    parser.parse_meta(li,meta_details, "TX")
+    vlan_hdr = li[packet_details["Ether"]["start"]+12:packet_details["Ether"]["start"]+16]
+    vlan_hdr = vlan_hdr[2:]+vlan_hdr[:2]
+    li = li[:packet_details["Ether"]["start"]+12] + li[packet_details["Ether"]["start"]+16:]
+    parser.parse_packet(li, packet_details)
+    vlan_pkt = parser.create_pkt(vlan_hdr,"vlan")
+    parser.pkt_to_json(parser.packet_dict,vlan_pkt)
+    print(json.dumps(parser.packet_dict))
+
+    if(parser.packet_dict['IP']['chksum'] == hex(ip_checksum) and parser.packet_dict['SCTP']['chksum'] == hex(sctp_checksum)):
+        return True
+    else:
+        return False
 
 
 cmodel_tests = [
@@ -509,5 +579,7 @@ cmodel_tests = [
     test_sctp_outer_l3_checksum_verification,
     test_sctp_outer_l4_checksum_verification,
     test_vlan_tx,
-    test_vlan_tx_tcp_l3l4_outer_checksum
+    test_vlan_tx_tcp_l3l4_outer_checksum,
+    test_vlan_tx_udp_l3l4_outer_checksum,
+    test_vlan_tx_sctp_l3l4_outer_checksum
 ]
